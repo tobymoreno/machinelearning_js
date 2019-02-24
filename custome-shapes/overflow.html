@@ -1,0 +1,107 @@
+<html>
+
+<head>
+    <style>
+        .parent {
+            width: 500px;
+            height: 300px;
+            border: 1px solid black;
+        }
+
+        .child1 {
+            height: 70px;
+            background-color: red;
+        }
+
+        .child2 {
+            height: 230px;
+            background-color: blue;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+            <div class="parent">
+                    <div class="child1">
+                    </div>
+                    <div id="mydiv" class="child2">
+                        <p>one</p>
+                        <p>two</p>
+                        <p>three</p>
+                        <span>x</span>
+                        <span>x</span>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <p>one</p>
+                        <p>two</p>
+                        <p>three</p>
+                        <span>x</span>
+                        <span>x</span>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>
+                        <div>
+                            <span>y</span>
+                        </div>            
+                    </div>
+                </div>
+                <div>
+                    <button onclick="exec();">Add more div</button>
+                </div>
+    </div>
+
+
+
+<script>
+    var objDiv = document.getElementById("mydiv");
+
+    function exec() {
+        console.log('exec');
+        var newdiv = document.createElement("div");
+        newdiv.style.width = "100%"
+        newdiv.style.height = "50px";
+        newdiv.style.backgroundColor = "white";
+        newdiv.innerHTML = "<span style='height : 200px; width : inherit; background-color: white'>x</span>";
+        objDiv.appendChild(newdiv);
+        objDiv.scrollTop = objDiv.scrollHeight;    
+        
+    }
+
+    objDiv.scrollTop = objDiv.scrollHeight;    
+</script>
+
+
+</body>
+
+</html>
