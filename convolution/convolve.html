@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <script language="javascript" type="text/javascript" src="../custome-shapes/p5.js"></script>
+    <script language="javascript" type="text/javascript" src="../custome-shapes/p5.dom.js"></script>
+
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="337"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        // var id = ctx.createImageData(1, 1);
+        // var d = id.data;
+
+        // d[0] = 0;
+        // d[1] = 0;
+        // d[2] = 255;
+        // d[3] = 255;
+
+        // ctx.putImageData(id, 10, 10);
+
+        // ctx.fillStyle = 'rgba(255, 0, 0, 128)';
+        // ctx.fillRect(5, 5, 100, 100);
+
+        var img = new Image();
+        img.width = 600;
+        img.height = 337;
+        img.src = "./demo_small.png";
+
+        ctx.drawImage(img, 0, 0);
+
+
+        Filters = {};
+        Filters.getPixels = function (img) {
+            var c = this.getCanvas(img.width, img.height);
+            var ctx = c.getContext('2d');
+            ctx.drawImage(img);
+            return ctx.getImageData(0, 0, c.width, c.height);
+        };
+
+        Filters.getCanvas = function (w, h) {
+            var c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            return c;
+        };
+
+        // var nc = Filters.getCanvas(5, 5)
+
+        // var nctx = nc.getContext('2d');
+
+
+        // nctx.fillStyle = 'rgba(128, 128, 128, 128)';
+        // nctx.fillRect(0, 0, 3, 3);
+
+        // document.body.appendChild(nc);
+
+        //https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas        
+
+        // document.body.appendChild(nc);
+       var pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    //     const k1 = [
+    //         1, 0, -1,
+    //         2, 0, -2,
+    //         1, 0, -1
+    //     ];
+
+        const sharpenFilter = 
+        [   0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0
+        ]
+
+    //     // var pixels = imageData.data;
+
+        var side = Math.round(Math.sqrt(sharpenFilter.length));
+
+        var halfSide = Math.floor(side / 2);
+
+        var src = pixels.data;
+        var sw = pixels.width;
+        var sh = pixels.height;
+
+        var w = sw;
+        var h = sh;
+
+        var output = ctx.createImageData(w, h);
+
+        // console.log(output);
+
+        var dst = output.data;
+        var alphaFac = 1;
+
+        for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
+                // console.log(y, x, w);
+                var sy = y;
+                var sx = x;
+
+                var dstOff = (y * w + x);
+
+                // console.log(dstOff);
+
+                var r = 0,
+                    g = 0,
+                    b = 0,
+                    a = 0;
+                for (var cy = 0; cy < side; cy++) {
+                    for (var cx = 0; cx < side; cx++) {
+                        var scy = sy + cy - halfSide;
+                        var scx = sx + cx - halfSide;
+                        if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
+                            var srcOff = (scy * sw + scx) * 4;
+                            var wt = sharpenFilter[cy * side + cx];
+                            // console.log(wt);
+                            r += src[srcOff] * wt;
+                            g += src[srcOff + 1] * wt;
+                            b += src[srcOff + 2] * wt;
+                            a += src[srcOff + 3] * wt;
+                        }
+                    }
+                }
+                dst[dstOff * 4] = r;
+                dst[dstOff * 4 + 1] = g;
+                dst[dstOff * 4 + 2] = b;
+                dst[dstOff * 4 + 3] = a + alphaFac * (255 - a);
+                //console.log(dstOff);
+                // dst[dstOff * 4] = 200;
+                // dst[dstOff * 4 +  1] = 0;
+                // dst[dstOff * 4 + 2] = 0;
+                // dst[dstOff * 4 + 3] = a + alphaFac * (255 - a);
+
+
+            }
+        }
+
+        // nctx.clearRect(0, 0, nc.width, nc.height);
+
+        // for(let i=0;i<=dstOff;i++) {
+        //     console.log(dstOff);
+        //     pixels.data[i * 4] = 255;
+        //     pixels.data[i * 4 + 1] = 0;
+        //     pixels.data[i * 4 + 2] = 0;
+        //     pixels.data[i * 4 + 3] = 255;
+        //     console.log(i * 4 + 3);
+        // }
+
+        // nctx.putImageData(output, 0, 0);
+    </script>
+</body>
+
+</html>
